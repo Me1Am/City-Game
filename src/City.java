@@ -19,8 +19,7 @@ public class City {
     double crimeRate = 0.01;
 
 
-    static BufferedReader reader = new BufferedReader(
-            new InputStreamReader(System.in));
+    static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
 
     public City() throws IOException {
         cityName = setCityName();
@@ -38,8 +37,9 @@ public class City {
         /*Other*/
         disasterChance = modifierValues[1];
         satisfactionStability = modifierValues[2];
+        crimeRate = modifierValues[3];
         crimeRateModifier = modifierValues[3];
-
+        
 
     }
 
