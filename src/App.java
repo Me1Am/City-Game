@@ -22,6 +22,7 @@ public class App {
                             + "!\nPopulation " + city.population
                             + "\nFunds " + city.money);    
 
+
         /*Main Loop*/
         while(true) {
             scenario.start();

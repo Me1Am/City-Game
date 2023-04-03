@@ -45,6 +45,10 @@ public class City extends App{
         
     }
 
+    public City(String empty) {
+        cityName = null;
+    }
+
     static int setDifficulty() throws IOException {
         System.out.println("Select difficulty 1-5:");
         /*Set Difficulty*/
@@ -85,7 +89,7 @@ public class City extends App{
     static double[] setDifficultyModifiers(int dif) {
         /*Set modifiers*/
         final double[] globalModifierLookup = {1, 0.80, 0.65, 0.40, 0.25};
-        final double[] satisfactionModifierLookup = {1.00, 1.07, 1.15, 1.25, 1.35};
+        final double[] satisfactionModifierLookup = {0.04, 0.07, 0.15, 0.25, 0.35};
         final double[] crimeRateModifierLookup = {0.01, 0.04, 0.09, 0.27, 0.35};
 
         /*Set Chances*/
@@ -100,37 +104,62 @@ public class City extends App{
 
     }
 
-    void changeVar(String type, String variableName) {
-        int modifier;
-        if(type.equals("+")){
-            modifier = 1;
-        } else {
-            modifier = 0;
-        }
-        //If 'modifier' is 1 then it increases, if not it decerases
+    void changeVar(int reward, String variableName) {
         if(variableName.equals("power")){
-            power *= (modifier + globalDifficultyModifier);
+            power += (reward * globalDifficultyModifier);
         } else {
             if(variableName.equals("water")){
-                water *= (modifier + globalDifficultyModifier);
+                water += (reward * globalDifficultyModifier);
             } else {
                 if(variableName.equals("money")){
-                    money *= (modifier + globalDifficultyModifier);
+                    money += (reward * globalDifficultyModifier);
                 } else {
                     if(variableName.equals("population")){
-                        population *= (modifier + globalDifficultyModifier);
+                        population += (reward * globalDifficultyModifier);
                     } else {
                         if(variableName.equals("satisfaction")){
-                            satisfaction *= (modifier + modifierValues[2]);
+                            satisfaction += (reward * modifierValues[2]);
                         } else {
                             if(variableName.equals("crimerate")){
-                                crimeRate *= (modifier + modifierValues[3]);
+                                crimeRate += (reward * modifierValues[3]);
                             }
                         }   
                     }   
                 }   
             }   
         }
+    }
+
+    void checkVar() {
+        /*Make Sure Variables Don't Excede Limit*/
+        if(power > 100){
+            power = 100;
+        } else {
+            if(power < 0){
+                power = 0;
+            }
+        }
+        if(water > 100){
+            water = 100;
+        } else {
+            if(water < 0){
+                water = 0;
+            }
+        }
+        if(satisfaction > 100){
+            satisfaction = 100;
+        } else {
+            if(satisfaction < 0){
+                satisfaction = 0;
+            }
+        }
+        if(population < 0){
+            population = 0;
+        }
+        if(crimeRate < 0){
+            crimeRate = 0;
+        }
+
     }
 
 }
