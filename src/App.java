@@ -7,53 +7,62 @@ import java.io.FileWriter;
 
 public class App {
     static String mostRecentInput;
+    
+    static City city;
+    static Scenario scenario;
+    static BufferedReader keyboardReader = new BufferedReader(new InputStreamReader(System.in));
 
     public static void main(String[] args) throws IOException, IllegalArgumentException, IllegalAccessException {
         System.out.println("Started " + System.currentTimeMillis());
-        City city = new City();
-        saveToFile("save", debug(city));
-        saveToFile("inputLog", "recreate");
-        System.out.println("City Name: " + city.cityName);    
+        city = new City();
+        scenario = new Scenario();
+        saveToFile("save", debug());
+        saveToFile("inputLog", "recreate"); //Clear input log
+        System.out.println("Welcome To " + city.cityName 
+                            + "!\nPopulation " + city.population
+                            + "\nFunds " + city.money);    
 
         /*Main Loop*/
         while(true) {
-            getInput();
-            parseInput(city);
-
+            scenario.start();
+            parseInput();
         }
 
     }
 
-    static String debug(Object city) throws IllegalArgumentException, IllegalAccessException {
-        String outPut = "";
+    static String debug() throws IllegalArgumentException, IllegalAccessException {
+        String output = "";
         for (Field field : city.getClass().getDeclaredFields()) {
             field.setAccessible(true);
             String name = field.getName();
             Object value = field.get(city);
-            outPut += name + ": " + value + "\n";
+            output += name + ": " + value + "\n";
         }    
-        return outPut;
+        return output;
 
     }
 
     static void getInput() throws IOException{
-        BufferedReader keyboardReader = new BufferedReader(new InputStreamReader(System.in));
         mostRecentInput = keyboardReader.readLine();
 
     }
 
-    static void parseInput(Object city) throws IOException, IllegalArgumentException, IllegalAccessException {
-        if(mostRecentInput.equals("debug")){
-            System.out.println(debug(city));
-        }
+    static void parseInput() throws IOException, IllegalArgumentException, IllegalAccessException {
+        getInput();
+        
         if(mostRecentInput.equals("exit")){
-            System.exit(0);
             saveToFile("inputLog", mostRecentInput);
-        }
-        if(mostRecentInput.equals("save")){
-            saveToFile("save", debug(city));
-        }
-        saveToFile("inputLog", mostRecentInput);
+            System.exit(0);
+        } else {
+            if(mostRecentInput.equals("debug")){
+                System.out.println(debug());
+            } else {
+                if(mostRecentInput.equals("save")){
+                    saveToFile("save", debug());
+                }
+            }
+        }  
+        saveToFile("inputLog", mostRecentInput);    //Save input
 
     }
 
