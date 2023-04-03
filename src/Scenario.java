@@ -32,6 +32,15 @@ public class Scenario extends City{
             if(type.equals("y/n")) {
                 if(mostRecentInput.equals("yes")){
                     //Apply each consequence of the choice
+                    /*
+                     * 
+                     * 
+                     * 
+                     * Try to use foreach
+                     * 
+                     * 
+                     * 
+                    */
                     for(int i = 0; i < yResultLength; i += 2){
                         App.city.changeVar(Integer.parseInt(yResults[i]), yResults[i + 1]);
                     }
