@@ -1,9 +1,7 @@
 import java.io.IOException;
 import java.io.BufferedReader;
-import java.io.BufferedWriter;
 import java.lang.reflect.Field;
 import java.io.InputStreamReader;
-import java.io.FileWriter;
 
 public class App {
     static String mostRecentInput;
@@ -16,8 +14,8 @@ public class App {
         System.out.println("Started " + System.currentTimeMillis());
         city = new City();
         scenario = new Scenario();
-        saveToFile("save", debug());
-        saveToFile("inputLog", "recreate"); //Clear input log
+        FileHandeler.saveToFile("save", debug());
+        FileHandeler.saveToFile("inputLog", "recreate"); //Clear input log
         System.out.println("Welcome To " + city.cityName 
                             + "!\nPopulation " + city.population
                             + "\nFunds " + city.money);    
@@ -27,6 +25,7 @@ public class App {
         while(true) {
             scenario.start();
             parseInput();
+            fileHandeler.getFileData();
         }
 
     }
@@ -38,7 +37,7 @@ public class App {
             String name = field.getName();
             Object value = field.get(city);
             output += name + ": " + value + "\n";
-        }    
+        } 
         return output;
 
     }
@@ -52,41 +51,19 @@ public class App {
         getInput();
         
         if(mostRecentInput.equals("exit")){
-            saveToFile("inputLog", mostRecentInput);
+            FileHandeler.saveToFile("inputLog", mostRecentInput);
             System.exit(0);
         } else {
             if(mostRecentInput.equals("debug")){
                 System.out.println(debug());
             } else {
                 if(mostRecentInput.equals("save")){
-                    saveToFile("save", debug());
+                    FileHandeler.saveToFile("save", debug());
                 }
             }
         }  
-        saveToFile("inputLog", mostRecentInput);    //Save input
+        FileHandeler.saveToFile("inputLog", mostRecentInput);    //Save input
 
-    }
-
-    static public void saveToFile(String fileName, String input) throws IOException {
-        /*Determine Write Factor*/
-        boolean append;
-        if(fileName.equals("save") || input.equals("recreate")){
-            append = false;
-        } else {
-            append = true;
-        }
-
-        /*Write*/
-        try {  
-            BufferedWriter writer = new BufferedWriter(new FileWriter(fileName + ".txt", append));
-            writer.write(input);
-            writer.write(System.lineSeparator());
-            writer.close();
-        }
-        catch (Exception e) {
-            e.getStackTrace();
-        }
-    
     }
 
 }

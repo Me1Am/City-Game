@@ -1,6 +1,7 @@
 import java.io.BufferedReader;
 import java.io.IOException;
 import java.io.InputStreamReader;
+import java.lang.reflect.Field;
 
 public class City extends App{
     static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -18,9 +19,9 @@ public class City extends App{
     int money = 100000;
     int population = 1000;
     int satisfaction = 90;
-    double crimeRate;
+    float crimeRate;
 
-    double[] modifierValues;    //GlobalModifier(0), DisasterProbability(1), SatisfactionModifier(2), CrimeRateModifier(3)
+    float[] modifierValues;    //GlobalModifier(0), DisasterProbability(1), SatisfactionModifier(2), CrimeRateModifier(3)
 
     public City() throws IOException {
          /*Set Variables*/
@@ -49,7 +50,7 @@ public class City extends App{
         cityName = null;
     }
 
-    static int setDifficulty() throws IOException {
+    private static int setDifficulty() throws IOException {
         System.out.println("Select difficulty 1-5:");
         /*Set Difficulty*/
         while(true) {   //Repeat until valid integer is intered
@@ -68,7 +69,7 @@ public class City extends App{
     
     }
 
-    static String setCityName() throws IOException {        
+    private static String setCityName() throws IOException {        
         System.out.println("Input City Name:");
         /*Set and Confirm Name*/
         while(true) {   //Repeat until name is confirmed
@@ -86,17 +87,17 @@ public class City extends App{
         
     }
 
-    static double[] setDifficultyModifiers(int dif) {
+    private static float[] setDifficultyModifiers(int dif) {
         /*Set modifiers*/
-        final double[] globalModifierLookup = {1, 0.80, 0.65, 0.40, 0.25};
-        final double[] satisfactionModifierLookup = {0.04, 0.07, 0.15, 0.25, 0.35};
-        final double[] crimeRateModifierLookup = {0.01, 0.04, 0.09, 0.27, 0.35};
+        final float[] globalModifierLookup = {1f, 0.80f, 0.65f, 0.40f, 0.25f};
+        final float[] satisfactionModifierLookup = {0.00004f, 0.07f, 0.15f, 0.25f, 0.35f};
+        final float[] crimeRateModifierLookup = {0.01f, 0.04f, 0.09f, 0.27f, 0.35f};
 
         /*Set Chances*/
-        final double[] disasterLookup = {0.00004, 0.00007, 0.00015, 0.00050, 0.00100};
+        final float[] disasterLookup = {0.00004f, 0.00007f, 0.00015f, 0.00050f, 0.00100f};
 
         /*Set Master Array*/
-        final double[] modifiedValues = {globalModifierLookup[dif], 
+        final float[] modifiedValues = {globalModifierLookup[dif], 
                                             disasterLookup[dif], 
                                             satisfactionModifierLookup[dif], 
                                             crimeRateModifierLookup[dif]};
@@ -160,6 +161,53 @@ public class City extends App{
             crimeRate = 0;
         }
 
+    }
+
+    int[] getCityStats() {
+        int[] stats = {power, water, money, population, satisfaction, getCityCrimeRateInt()};
+        return stats;
+    }
+
+    String getCityStatsHeaders() throws IllegalArgumentException, IllegalAccessException {
+        String output = "";
+        for (Field field : city.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            String name = field.getName();
+            if(name.equals("power") || name.equals("water") || name.equals("money") || name.equals("population") || name.equals("satisfaction") || name.equals("crimeRate")){
+                Object value = field.get(city);
+                output += name + ": " + value + "\n";
+            }
+        } 
+        return output;
+
+    }
+
+    int getCityPower() {
+        return power;
+    }
+    
+    int getCityWater() {
+        return water;
+    }
+    
+    int getCityMoney() {
+        return money;
+    }
+    
+    int getCityPopulation() {
+        return population;
+    }
+    
+    int getCitySatisfaction() {
+        return satisfaction;
+    }
+    
+    float getCityCrimeRate() {
+        return crimeRate;
+    }
+
+    int getCityCrimeRateInt() {
+        return Math.round(100f * crimeRate);
     }
 
 }

@@ -1,4 +1,7 @@
+import java.io.File;
+import java.util.Scanner;
 import java.io.IOException;
+import java.io.FileNotFoundException;
 
 public class Scenario extends City{
     int iteration;
@@ -8,6 +11,7 @@ public class Scenario extends City{
     }
 
     public void start() throws IOException, IllegalArgumentException, IllegalAccessException {
+        /*First Tutorial Scenario*/
         String[] yResults = {"10", "money", "-10", "satisfaction"};
         String[] nResults = {"-1000", "money", "10", "satisfaction"};
         
@@ -16,6 +20,17 @@ public class Scenario extends City{
         
         App.parseInput();
         parse("y/n", yResults, nResults);
+        System.out.println("Great job! Here's the new stats:");
+        System.out.println(App.city.getCityStatsHeaders());
+
+    }
+
+    public void scenario() throws IllegalArgumentException, IllegalAccessException{
+        /*Load Scenario Data*/
+
+        /*Final Steps*/
+        System.out.println("Here's the new stats:");
+        System.out.println(App.city.getCityStatsHeaders());
 
     }
 
@@ -31,16 +46,6 @@ public class Scenario extends City{
             /*Yes-No Option*/
             if(type.equals("y/n")) {
                 if(mostRecentInput.equals("yes")){
-                    //Apply each consequence of the choice
-                    /*
-                     * 
-                     * 
-                     * 
-                     * Try to use foreach
-                     * 
-                     * 
-                     * 
-                    */
                     for(int i = 0; i < yResultLength; i += 2){
                         App.city.changeVar(Integer.parseInt(yResults[i]), yResults[i + 1]);
                     }
