@@ -1,7 +1,8 @@
-import java.io.BufferedReader;
+import java.util.ArrayList;
 import java.io.IOException;
-import java.io.InputStreamReader;
+import java.io.BufferedReader;
 import java.lang.reflect.Field;
+import java.io.InputStreamReader;
 
 public class City extends App{
     static BufferedReader reader = new BufferedReader(new InputStreamReader(System.in));
@@ -23,6 +24,7 @@ public class City extends App{
 
     float[] modifierValues;    //GlobalModifier(0), DisasterProbability(1), SatisfactionModifier(2), CrimeRateModifier(3)
 
+    /*Constructor*/
     public City() throws IOException {
          /*Set Variables*/
 
@@ -45,14 +47,17 @@ public class City extends App{
         crimeRateModifier = modifierValues[3];
         
     }
-
+    
+    /*Empty Constructor*/
     public City(String empty) {
         cityName = null;
     }
 
+    /*Return Inputted Difficulty*/
     private static int setDifficulty() throws IOException {
         System.out.println("Select difficulty 1-5:");
-        /*Set Difficulty*/
+        
+        //Set Difficulty
         while(true) {   //Repeat until valid integer is intered
             try {
                 int difficulty = Integer.parseInt(reader.readLine());
@@ -69,9 +74,11 @@ public class City extends App{
     
     }
 
+    /*Return Inputted Name for City*/
     private static String setCityName() throws IOException {        
         System.out.println("Input City Name:");
-        /*Set and Confirm Name*/
+        
+        //Set and Confirm Name
         while(true) {   //Repeat until name is confirmed
             String initial = reader.readLine();
             if(initial.length() <= 64) {
@@ -83,10 +90,13 @@ public class City extends App{
             } else {
                 System.out.println("Name too long! 64 characters max!");
             }
+            System.out.println("Enter Again:");
         }
         
     }
 
+    /*Return Float Array of The Modifiers and Chances*/
+    //Based on difficulty
     private static float[] setDifficultyModifiers(int dif) {
         /*Set modifiers*/
         final float[] globalModifierLookup = {1f, 0.80f, 0.65f, 0.40f, 0.25f};
@@ -105,6 +115,8 @@ public class City extends App{
 
     }
 
+    /*Change City Values*/
+    //Applies results from scenarios
     void changeVar(int reward, String variableName) {
         if(variableName.equals("power")){
             power += (reward * globalDifficultyModifier);
@@ -131,6 +143,8 @@ public class City extends App{
         }
     }
 
+    /*Check Variables for Validity*/
+    //Sets and keeps limit for variables
     void checkVar() {
         /*Make Sure Variables Don't Excede Limit*/
         if(power > 100){
@@ -163,11 +177,36 @@ public class City extends App{
 
     }
 
-    int[] getCityStats() {
-        int[] stats = {power, water, money, population, satisfaction, getCityCrimeRateInt()};
-        return stats;
+    /*Return a String of the City Object's Values*/
+    //Primarly for printing values to terminal
+    String debug() throws IllegalArgumentException, IllegalAccessException {
+        String output = "";
+        for (Field field : this.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            String name = field.getName();
+            Object value = field.get(this);
+            output += name + ": " + value + "\n";
+        } 
+        return output;
+
     }
 
+    /*Return an Array of the City object's Values*/
+    //Primarly to save to file
+    ArrayList<String> debugArrayList() throws IllegalArgumentException, IllegalAccessException {
+        ArrayList<String> output = new ArrayList<String>();
+        for (Field field : this.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            String name = field.getName();
+            Object value = field.get(this);
+            output.add(name + "=" + value);
+        } 
+        return output;
+
+    }
+
+    /*Return User's City Stats*/
+    //Returns only the values that the user should see
     String getCityStatsHeaders() throws IllegalArgumentException, IllegalAccessException {
         String output = "";
         for (Field field : city.getClass().getDeclaredFields()) {
@@ -180,34 +219,6 @@ public class City extends App{
         } 
         return output;
 
-    }
-
-    int getCityPower() {
-        return power;
-    }
-    
-    int getCityWater() {
-        return water;
-    }
-    
-    int getCityMoney() {
-        return money;
-    }
-    
-    int getCityPopulation() {
-        return population;
-    }
-    
-    int getCitySatisfaction() {
-        return satisfaction;
-    }
-    
-    float getCityCrimeRate() {
-        return crimeRate;
-    }
-
-    int getCityCrimeRateInt() {
-        return Math.round(100f * crimeRate);
     }
 
 }

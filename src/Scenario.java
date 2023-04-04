@@ -2,6 +2,7 @@ import java.io.IOException;
 import java.lang.reflect.Field;
 
 public class Scenario extends City{
+    int iteration;
     String scenarioType;
     String scenarioAnswerType;
     String scenarioIntro;
@@ -10,7 +11,6 @@ public class Scenario extends City{
     String scenarioOutComeTextN;
     String scenarioResultY;
     String scenarioResultN;
-    int iteration;
     
     public Scenario() throws IOException {
         super("empty");
@@ -18,22 +18,7 @@ public class Scenario extends City{
 
     }
 
-    static void start() throws IOException, IllegalArgumentException, IllegalAccessException {
-        /*First Tutorial Scenario*/
-        String[] yResults = {"1000", "money", "-10", "satisfaction"};
-        String[] nResults = {"-1000", "money", "10", "satisfaction"};
-        
-        System.out.println("Hello! This is your city, do what you want. Just make sure everything stays in the green!");
-        System.out.println("Lets start easy, just decide if taxes should be risen or not:");
-        
-        App.parseInput();
-        parse("y/n", yResults, nResults);
-        System.out.println("Great job! Here's the new stats:");
-        System.out.println(App.city.getCityStatsHeaders());
-
-    }
-
-    static void parse(String type, String[] yResults, String[] nResults) throws IOException {
+    void parse(String type, String[] yResults, String[] nResults) throws IOException {
         int yResultLength = yResults.length;    
         int nResultLength = nResults.length;
 
@@ -73,19 +58,30 @@ public class Scenario extends City{
             if(name.contains("scenario")){            
                 String fieldName = name.replace("scenario", "scenario" + scenarioNum); //Set the scenario number
                 field.set(App.scenario, FileHandeler.getPropertyData("data/data.properties", fieldName));
-            } 
+            }
         }
 
     }
 
-    void loadScenario(String type, String answerType, int scenarioNum) throws IllegalArgumentException, IllegalAccessException, IOException{
-        /*Load Scenario Data*/
-            scenarioType = FileHandeler.getPropertyData("data/data.properties", type);
-            scenarioAnswerType= FileHandeler.getPropertyData("data/data.properties", answerType);
+    String getScenarioOutcomeText(String answer) {
+        if(answer.equals("yes")){
+            return scenarioOutComeTextY;
+        } else {
+            if(answer.equals("no")){
+                return scenarioOutComeTextN;
+            } else {
+                return null;
+            }
+        }
+    }
 
-        /*Final Steps*/
-        System.out.println("Here's the new stats:");
-        System.out.println(App.city.getCityStatsHeaders());
+    String[] scenarioResultY() {
+        return scenarioResultY.split("~");
+
+    }
+
+    String[] scenarioResultN() {
+        return scenarioResultY.split("~");
 
     }
 
