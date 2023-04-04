@@ -1,18 +1,26 @@
-import java.io.File;
-import java.util.Scanner;
 import java.io.IOException;
-import java.io.FileNotFoundException;
+import java.lang.reflect.Field;
 
 public class Scenario extends City{
+    String scenarioType;
+    String scenarioAnswerType;
+    String scenarioIntro;
+    String scenarioText;
+    String scenarioOutComeTextY;
+    String scenarioOutComeTextN;
+    String scenarioResultY;
+    String scenarioResultN;
     int iteration;
+    
     public Scenario() throws IOException {
         super("empty");
         iteration = 0;
+
     }
 
-    public void start() throws IOException, IllegalArgumentException, IllegalAccessException {
+    static void start() throws IOException, IllegalArgumentException, IllegalAccessException {
         /*First Tutorial Scenario*/
-        String[] yResults = {"10", "money", "-10", "satisfaction"};
+        String[] yResults = {"1000", "money", "-10", "satisfaction"};
         String[] nResults = {"-1000", "money", "10", "satisfaction"};
         
         System.out.println("Hello! This is your city, do what you want. Just make sure everything stays in the green!");
@@ -25,16 +33,7 @@ public class Scenario extends City{
 
     }
 
-    public void scenario() throws IllegalArgumentException, IllegalAccessException{
-        /*Load Scenario Data*/
-
-        /*Final Steps*/
-        System.out.println("Here's the new stats:");
-        System.out.println(App.city.getCityStatsHeaders());
-
-    }
-
-    void parse(String type, String[] yResults, String[] nResults) throws IOException {
+    static void parse(String type, String[] yResults, String[] nResults) throws IOException {
         int yResultLength = yResults.length;    
         int nResultLength = nResults.length;
 
@@ -65,6 +64,29 @@ public class Scenario extends City{
         }
         App.city.checkVar();
     
+    }
+
+    void loadScenarioData(int scenarioNum) throws IllegalArgumentException, IllegalAccessException, IOException {
+        for (Field field : App.scenario.getClass().getDeclaredFields()) {
+            field.setAccessible(true);
+            String name = field.getName();
+            if(name.contains("scenario")){            
+                String fieldName = name.replace("scenario", "scenario" + scenarioNum); //Set the scenario number
+                field.set(App.scenario, FileHandeler.getPropertyData("data/data.properties", fieldName));
+            } 
+        }
+
+    }
+
+    void loadScenario(String type, String answerType, int scenarioNum) throws IllegalArgumentException, IllegalAccessException, IOException{
+        /*Load Scenario Data*/
+            scenarioType = FileHandeler.getPropertyData("data/data.properties", type);
+            scenarioAnswerType= FileHandeler.getPropertyData("data/data.properties", answerType);
+
+        /*Final Steps*/
+        System.out.println("Here's the new stats:");
+        System.out.println(App.city.getCityStatsHeaders());
+
     }
 
 }
