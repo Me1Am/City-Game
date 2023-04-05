@@ -47,8 +47,8 @@ public class Scenario extends City{
                 }
             }
         }
-        App.city.checkVar();
-    
+        FileHandeler.saveToFile("inputLog", mostRecentInput);
+
     }
 
     void loadScenarioData(int scenarioNum) throws IllegalArgumentException, IllegalAccessException, IOException {

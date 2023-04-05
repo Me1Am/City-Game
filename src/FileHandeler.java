@@ -19,7 +19,11 @@ class FileHandeler {
         String fileType;
         if(fileName.equals("save") || input.equals("recreate")){
             append = false;
-            fileType = ".properties";
+            if(fileName.equals("save")){
+                fileType = ".properties";
+            } else {
+                fileType = ".txt";
+            }
         } else {
             append = true;
             fileType = ".txt";

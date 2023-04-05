@@ -11,17 +11,21 @@ public class App {
     static BufferedReader keyboardReader = new BufferedReader(new InputStreamReader(System.in));
 
     public static void main(String[] args) throws IOException, IllegalArgumentException, IllegalAccessException {
+        /*Setup and Initilize City*/
         System.out.println("Started " + System.currentTimeMillis());
-        city = new City();
+        city = new City();  //Run setup
+        clearCMD(); //Clear terminal
         FileHandeler.saveProperties("data/save", city.debugArrayList()); //Save city
         FileHandeler.saveToFile("inputLog", "recreate"); //Clear input log
-        System.out.println("Welcome To " + city.cityName + "!\nPopulation " + city.population + "\nFunds " + city.money);   //Introduce user to their city  
+        System.out.println("Welcome To " + city.cityName + "!\nPopulation " + city.population + "\nFunds " + city.money + "\n");   //Introduce user to their city  
         
         /*Run Tutorial Scenarios*/
         runScenario(1);
         getInput();
         parseInput();
         runScenario(2);
+        getInput();
+        parseInput();
 
         /*Main Loop*/
         while(true) {
@@ -42,6 +46,7 @@ public class App {
         scenario.parse(scenario.scenarioAnswerType, scenario.scenarioResultY(), scenario.scenarioResultN());    //Computate the user's input
         System.out.println(scenario.getScenarioOutcomeText(mostRecentInput));   //Print the outcom
 
+        scenario.iteration += 1;    //Increase iteration
         city.checkVar();    //Check and adjust variables if necessary
         System.out.println(city.getCityStatsHeaders()); //Print new changes
 
@@ -71,5 +76,11 @@ public class App {
 
     }
     
+    /*Clear Terminal*/
+    static void clearCMD() {
+        System.out.print("\033[H\033[2J");  
+        System.out.flush();  
+    }
+
 }
 
