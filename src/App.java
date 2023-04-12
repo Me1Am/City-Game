@@ -72,7 +72,9 @@ public class App {
                     FileHandeler.saveProperties("data/save", city.debugArrayList());
                 }
             }
-        }  
+        }
+        
+        clearCMD();
 
     }
     

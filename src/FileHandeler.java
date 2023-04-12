@@ -67,6 +67,7 @@ class FileHandeler {
         } catch (FileNotFoundException ex) {
         } catch (IOException ex) {
         }
+        
     }
 
     static String getPropertyData(String path, String item) throws IOException {

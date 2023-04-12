@@ -48,6 +48,7 @@ public class Scenario extends City{
             }
         }
         FileHandeler.saveToFile("inputLog", mostRecentInput);
+        clearCMD();
 
     }
 
